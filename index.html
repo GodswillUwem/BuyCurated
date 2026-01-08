@@ -4,9 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jiji-Style Classifieds</title>
+  <title>CURATED | Artisan Marketplace</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
+    // Prevent crashes if process.env is accessed before the bundler/environment injects it
+    window.process = window.process || { env: {} };
+    
     tailwind.config = {
       theme: {
         extend: {
@@ -21,10 +24,30 @@
   </script>
   <style>
     :root {
-      --primary-color: #fb7701;
+      --primary-color: #C2714F;
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Smooth loading state */
+    #root:empty {
+      background: #f4f4f4;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #root:empty::after {
+      content: "CURATING...";
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      color: #C2714F;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
   </style>
 <script type="importmap">
 {
@@ -39,7 +62,8 @@
 }
 </script>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-[#f4f4f4] text-gray-900">
   <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
 </body>
 </html>

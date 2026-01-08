@@ -35,22 +35,29 @@ const App: React.FC = () => {
   const isSuperAdmin = session?.user?.email === 'oreofezoe@gmail.com';
 
   const loadData = async () => {
-    setLoading(true);
-    const data = await fetchListings();
-    
-    // Merge and strictly filter out anything without images
-    const combined = [...data, ...INITIAL_LISTINGS]
-      .filter((listing, index, self) => 
-        // Unique IDs only
-        self.findIndex(l => l.id === listing.id) === index
-      )
-      .filter(l => 
-        // Ensure images array exists and has at least one non-empty string
-        l.images && l.images.length > 0 && l.images[0]?.trim() !== ''
-      );
+    try {
+      setLoading(true);
+      const data = await fetchListings();
+      
+      // Merge and strictly filter out anything without images
+      const combined = [...(data || []), ...INITIAL_LISTINGS]
+        .filter((listing, index, self) => 
+          // Unique IDs only
+          self.findIndex(l => l.id === listing.id) === index
+        )
+        .filter(l => 
+          // Ensure images array exists and has at least one valid image
+          l.images && l.images.length > 0 && typeof l.images[0] === 'string' && l.images[0].startsWith('http')
+        );
 
-    setListings(combined);
-    setLoading(false);
+      setListings(combined);
+    } catch (error) {
+      console.error("Failed to load listings:", error);
+      // Fallback to initial listings if Supabase fails
+      setListings(INITIAL_LISTINGS);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
