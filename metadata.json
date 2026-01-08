@@ -1,0 +1,8 @@
+{
+  "name": "CURATED - Handmade Gifts",
+  "description": "Premium marketplace for high-quality, artisanal handmade gifts directly from independent US makers.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
